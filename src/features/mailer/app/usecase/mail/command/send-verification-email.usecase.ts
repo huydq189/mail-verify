@@ -1,4 +1,4 @@
-import { Inject, Provider, Scope } from '@heronjs/common';
+import { EventHandler, EventLookup, Inject, Provider, Scope } from '@heronjs/common';
 import { ProviderTokens, UsecaseTokens } from '../../../../../../constants';
 import {
     SendVerificationEmailUseCaseContext,
@@ -30,7 +30,12 @@ export class SendVerificationEmailUseCase
     >
     implements ISendVerificationEmailUseCase
 {
-    constructor(@Inject(ProviderTokens.MAILTRAP) private readonly _mailProvider: IMailProvider) {
+    constructor(
+        @EventLookup('test-messaging')
+        private _event: EventHandler<Any>,
+        @Inject(ProviderTokens.MAILTRAP)
+        private readonly _mailProvider: IMailProvider,
+    ) {
         super();
         this.setMethods([this.validate.bind(this), this.processing.bind(this), this.map.bind(this)]);
     }

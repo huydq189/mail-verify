@@ -23,7 +23,7 @@ export class KafkaEventSubscriber implements IEventSubscriber {
                         break;
                     } catch (ex) {
                         // nothing
-                        logger.error(`event retrie ${i + 1}`, ex);
+                        logger.error(`event retry ${i + 1}`, ex);
 
                         if (i === retries - 1) {
                             try {
