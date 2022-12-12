@@ -6,7 +6,7 @@ import { GlobalApiErrorInterceptor } from './interceptors';
 const main = async () => {
     const app = await HeronJS.create({ module: AppModule });
     await app.listen({
-        port: 3000,
+        port: 3001,
         options: {
             cors: {
                 origin: '*',
