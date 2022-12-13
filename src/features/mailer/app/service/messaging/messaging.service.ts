@@ -42,7 +42,7 @@ export class MessageBusService {
                 body: `Hi! There, You have recently visited
                     our website and entered your email.
                     Please follow the given link to verify your email
-                    <a href="http://localhost:3000/mailers/verify/${token}" >Verify</a>
+                    <a href="http://localhost:3001/mailers/verify/${token}" >Verify</a>
                     Thanks`,
             };
 

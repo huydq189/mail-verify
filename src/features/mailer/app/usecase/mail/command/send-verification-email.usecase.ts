@@ -74,7 +74,7 @@ export class SendVerificationEmailUseCase
             body: `Hi! There, You have recently visited
                     our website and entered your email.
                     Please follow the given link to verify your email
-                    http://localhost:3000/mailers/verify/${token}
+                    http://localhost:3001/mailers/verify/${token}
                     Thanks`,
         };
 
