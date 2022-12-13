@@ -2,7 +2,7 @@ import { Service, OnStart, Inject, EventName, PreDestroy } from '@heronjs/common
 import { ProviderTokens } from '../../../../../constants';
 import { KafkaService } from '../../../infras/providers';
 import { EachMessageHandler } from 'kafkajs';
-import { KafkaConfig } from '../../../../../configs';
+import { authConfig, KafkaConfig } from '../../../../../configs';
 import { IMailProvider } from '../../../infras/providers/mail/types';
 import jwt from 'jsonwebtoken';
 
@@ -23,10 +23,10 @@ export class MessageBusService {
 
             const token = jwt.sign(
                 {
-                    data: 'Token Data',
+                    email: response.email,
                 },
-                'ourSecretKey',
-                { expiresIn: '10m' },
+                authConfig.jwtSecret,
+                { expiresIn: authConfig.jwtDuration },
             );
 
             const mailOptions = {

@@ -24,7 +24,6 @@ export class MailerRest {
         try {
             await this._sendVerificationEmailUsecase.exec(body);
         } catch (error) {
-            console.log('HUYDEBUG >>> ', error);
             throw new APIError(StatusCodes.INTERNAL_SERVER_ERROR, 'cant send email');
         }
     }

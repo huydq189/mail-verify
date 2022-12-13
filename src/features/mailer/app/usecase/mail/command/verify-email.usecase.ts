@@ -15,6 +15,8 @@ import {
 import { IUseCase, UseCase, UseCasePipeMethod, ValidatorUtil } from '@cbidigital/aqua';
 import { IMailProvider } from '../../../../infras/providers/mail/types';
 import jwt from 'jsonwebtoken';
+import { authConfig, KafkaConfig } from '../../../../../../configs';
+import { KafkaService } from '../../../../infras/providers';
 
 export type IVerifyEmailUseCase = IUseCase<VerifyEmailUseCaseInput, VerifyEmailUseCaseOutput>;
 
@@ -23,7 +25,10 @@ export class VerifyEmailUseCase
     extends UseCase<VerifyEmailUseCaseInput, VerifyEmailUseCaseOutput, VerifyEmailUseCaseContext>
     implements IVerifyEmailUseCase
 {
-    constructor(@Inject(ProviderTokens.MAILTRAP) private readonly _mailProvider: IMailProvider) {
+    constructor(
+        @Inject(ProviderTokens.KAFKA) private readonly _messageBus: KafkaService,
+        @Inject(ProviderTokens.MAILTRAP) private readonly _mailProvider: IMailProvider,
+    ) {
         super();
         this.setMethods([this.validate.bind(this), this.processing.bind(this), this.map.bind(this)]);
     }
@@ -41,13 +46,17 @@ export class VerifyEmailUseCase
     processing: UseCasePipeMethod<VerifyEmailUseCaseProcessingInput, VerifyEmailUseCaseProcessingOutput> =
         async (input) => {
             // Verifying the JWT token
-            jwt.verify(input.token, 'ourSecretKey', function (err, decoded) {
-                console.log('HUYDEBUG decoded: ', decoded);
-                if (err) {
-                    console.log(err);
-                    throw new Error('Email verification failed  possibly the link is invalid or expired');
-                }
-            });
+            try {
+                type verifyOutput = {
+                    email: string;
+                };
+                const { email } = (await jwt.verify(input.token, authConfig.jwtSecret)) as verifyOutput;
+                this._messageBus.sendMessage(`${KafkaConfig.TOPIC_PREFIX}user.verified`, {
+                    email,
+                });
+            } catch (error) {
+                console.log(error);
+            }
         };
 
     map: UseCasePipeMethod<VerifyEmailUseCaseMapInput, VerifyEmailUseCaseMapOutput> = async (input) => {

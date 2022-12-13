@@ -1,9 +1,8 @@
 import { Provider, Scope } from '@heronjs/common';
 import { ProviderTokens } from '../../../../../../constants';
-import { EachMessageHandler, Kafka } from 'kafkajs';
+import { EachMessageHandler, Kafka, Partitioners } from 'kafkajs';
 import { KafkaConfig } from '../../../../../../configs';
 import { v4 as uuidv4 } from 'uuid';
-
 @Provider({ token: ProviderTokens.KAFKA, scope: Scope.SINGLETON })
 export class KafkaService {
     private kafka: Kafka;
@@ -35,15 +34,13 @@ export class KafkaService {
 
     // Producer: sends message to the topic
     async sendMessage(topic: string, message: object) {
-        const producer = this.kafka.producer();
+        const producer = this.kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner });
         await producer.connect();
 
         await producer.send({
             topic: topic,
             messages: [{ value: JSON.stringify(message), key: uuidv4() }],
         });
-
-        console.info('Message Sent');
 
         await producer.disconnect();
 
