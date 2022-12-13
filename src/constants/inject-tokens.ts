@@ -19,6 +19,7 @@ export const UsecaseTokens = Object.freeze({
 
 export const ProviderTokens = Object.freeze({
     MAILTRAP: 'mailtrap.provider',
+    KAFKA: 'kafka.provider',
 });
 
 export const MailerTokens = Object.freeze({

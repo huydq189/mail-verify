@@ -31,8 +31,6 @@ export class SendVerificationEmailUseCase
     implements ISendVerificationEmailUseCase
 {
     constructor(
-        @EventLookup('test-messaging')
-        private _event: EventHandler<Any>,
         @Inject(ProviderTokens.MAILTRAP)
         private readonly _mailProvider: IMailProvider,
     ) {

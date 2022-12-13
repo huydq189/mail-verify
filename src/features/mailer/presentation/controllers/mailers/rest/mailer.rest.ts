@@ -1,6 +1,7 @@
-import { Rest, Post, Inject, Body, APIError, Get, Param } from '@heronjs/common';
+import { Rest, Post, Inject, Body, APIError, Get, Param, EventLookup, EventHandler } from '@heronjs/common';
 import { StatusCodes } from 'http-status-codes';
 import { UsecaseTokens } from '../../../../../../constants';
+import { MessageBusService } from '../../../../app/service/messaging/messaging.service';
 import {
     ISendVerificationEmailUseCase,
     IVerifyEmailUseCase,
